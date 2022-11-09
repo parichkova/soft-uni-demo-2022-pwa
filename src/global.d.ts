@@ -1,1 +1,1 @@
-declare module 'react-qr-scanner';
+declare module 'uuid';

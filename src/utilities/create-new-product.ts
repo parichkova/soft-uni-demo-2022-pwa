@@ -1,10 +1,10 @@
 import { Product } from '../types/types'
 import { getMockarooUrl } from './utilities'
 
-export const createProduct = async (product: Product) => {
+export const createProduct = async (product: Product | null) => {
   try {
     const addProductQuery = await fetch(
-      getMockarooUrl('/products'),
+      getMockarooUrl('/product'),
       { method: "POST", body: JSON.stringify(product) }
     );
 
