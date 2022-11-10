@@ -19,7 +19,6 @@ export const AddProduct = () => {
   const [length, setLength] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
-  const [data, setData] = useState<Product | null>(null);
 
   const onChange =  async (fileList: any) => {
     if (fileList.length && fileList[0]) {
@@ -29,9 +28,9 @@ export const AddProduct = () => {
 
   const onClick = () => {
     if (barcode && weight) {
-      setData({
+      createProduct({
         id: v4(),
-        barcode,
+        barcode: parseInt(barcode),
         description,
         weight,
         width,
@@ -39,10 +38,6 @@ export const AddProduct = () => {
         length,
         imageUrl,
       });
-    }
-
-    if (data) {
-      createProduct(data);
     }
   }
 
@@ -80,8 +75,7 @@ export const AddProduct = () => {
             >
               <Input
                 min="0"
-                onInput={(e) => setWeight(e ? parseInt(e) : 0)}
-                onChange={(e) => setWeight(e ? parseInt(e) : 0)}
+                onChange={({ target: { value } }) => setWeight(value ? parseInt(value) : 0)}
                 value={weight ? `${weight}` : undefined}
               />
             </Form.Item>
@@ -90,31 +84,28 @@ export const AddProduct = () => {
             >
               <Input
                 min="0"
-                onChange={(e) => setWidth(e ? parseInt(e) : 0)}
+                onChange={({ target: { value } }) => setWidth(value ? parseInt(value) : 0)}
                 value={width ? `${width}` : undefined}
               />
             </Form.Item>
-            {/* </Space.Compact> */}
-            {/* <Space.Compact size="medium" block> */}
-              <Form.Item
-                label="Length"
-              >
-                <Input
-                  min="0"
-                  onChange={(e) => setLength(e ? parseInt(e) : 0)}
-                  value={length ? `${length}` : undefined}
-                />
-              </Form.Item>
-              <Form.Item
-                label="Height"
-              >
-                <Input
-                  min="0"
-                  onChange={(e) => setHeight(e ? parseInt(e) : 0)}
-                  value={height ? `${height}` : undefined}
-                />
-              </Form.Item>
-            {/* </Space.Compact> */}
+            <Form.Item
+              label="Length"
+            >
+              <Input
+                min="0"
+                onChange={({ target: { value } }) => setLength(value ? parseInt(value) : 0)}
+                value={length ? `${length}` : undefined}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Height"
+            >
+              <Input
+                min="0"
+                onChange={({ target: { value } }) => setHeight(value ? parseInt(value) : 0)}
+                value={height ? `${height}` : undefined}
+              />
+            </Form.Item>
           <Form.Item label="Product image" valuePropName="fileList">
             <Upload
               action=""
