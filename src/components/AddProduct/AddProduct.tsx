@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { v4 } from "uuid";
 import { PlusOutlined } from "@ant-design/icons";
-import { Form, Input, Button, InputNumber, Upload, Layout, Space } from "antd";
+import { Form, Input, Button, Upload, Layout, Alert } from "antd";
 
-import { Product } from "~/types/types";
 import { createProduct } from "~/utilities/create-new-product";
 import { RcFile } from "antd/lib/upload";
 import { getBase64 } from "~/utilities/utilities";
@@ -19,6 +18,7 @@ export const AddProduct = () => {
   const [length, setLength] = useState<number>(0);
   const [width, setWidth] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   const onChange =  async (fileList: any) => {
     if (fileList.length && fileList[0]) {
@@ -26,9 +26,9 @@ export const AddProduct = () => {
     }
   };
 
-  const onClick = () => {
+  const onClick = async () => {
     if (barcode && weight) {
-      createProduct({
+      const result = await createProduct({
         id: v4(),
         barcode: parseInt(barcode),
         description,
@@ -38,11 +38,25 @@ export const AddProduct = () => {
         length,
         imageUrl,
       });
+
+      if (result) {
+        setShowToast(!showToast);
+      }
     }
+
   }
 
   return (
     <>
+      {showToast && <Alert
+        style={{ margin: '20px' }}
+        message={`Product with ${description ? `description "${description}"` : `barcode ${barcode}`} added.`}
+        type="success"
+        onClose={() => setShowToast(!showToast)}
+        showIcon
+        closable
+      />
+      }
       <Content style={{ padding: "50px" }}>
         <Form
           layout="horizontal"
