@@ -51,6 +51,8 @@ export const AddProduct = () => {
       <Content style={{ padding: "50px" }}>
         <Form
           layout="horizontal"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 16 }}
         >
           <Form.Item label="Barcode" required>
             <Input
@@ -71,13 +73,12 @@ export const AddProduct = () => {
               value={description}
             />
           </Form.Item>
-          <Space.Compact block>
+          {/* <Space.Compact size="medium" block> */}
             <Form.Item
-              style={{ width: "24%", marginRight: "1%" }}
               label="Weight"
               required
             >
-              <InputNumber
+              <Input
                 min="0"
                 onInput={(e) => setWeight(e ? parseInt(e) : 0)}
                 onChange={(e) => setWeight(e ? parseInt(e) : 0)}
@@ -86,35 +87,34 @@ export const AddProduct = () => {
             </Form.Item>
             <Form.Item
               label="Width"
-              style={{ width: "24%", marginRight: "1%" }}
             >
-              <InputNumber
+              <Input
                 min="0"
                 onChange={(e) => setWidth(e ? parseInt(e) : 0)}
                 value={width ? `${width}` : undefined}
               />
             </Form.Item>
-            <Form.Item
-              label="Length"
-              style={{ width: "24%", marginRight: "1%" }}
-            >
-              <InputNumber
-                min="0"
-                onChange={(e) => setLength(e ? parseInt(e) : 0)}
-                value={length ? `${length}` : undefined}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Height"
-              style={{ width: "24%", marginRight: "1%" }}
-            >
-              <InputNumber
-                min="0"
-                onChange={(e) => setHeight(e ? parseInt(e) : 0)}
-                value={height ? `${height}` : undefined}
-              />
-            </Form.Item>
-          </Space.Compact>
+            {/* </Space.Compact> */}
+            {/* <Space.Compact size="medium" block> */}
+              <Form.Item
+                label="Length"
+              >
+                <Input
+                  min="0"
+                  onChange={(e) => setLength(e ? parseInt(e) : 0)}
+                  value={length ? `${length}` : undefined}
+                />
+              </Form.Item>
+              <Form.Item
+                label="Height"
+              >
+                <Input
+                  min="0"
+                  onChange={(e) => setHeight(e ? parseInt(e) : 0)}
+                  value={height ? `${height}` : undefined}
+                />
+              </Form.Item>
+            {/* </Space.Compact> */}
           <Form.Item label="Product image" valuePropName="fileList">
             <Upload
               action=""
