@@ -48,7 +48,7 @@ self.addEventListener('push', (event) => {
 
   const notification = {
     body: event.data.text(),
-    icon: './assets/favicon.ico',
+    icon: './favicon.ico',
   };
 
   if (Notification.permission === 'granted') {

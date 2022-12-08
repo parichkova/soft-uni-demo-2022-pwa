@@ -1,28 +1,27 @@
 {
   "short_name": "Software University demo",
-  "name": "Software University demo long name",
+  "name": "Software University PWA demo",
   "icons": [
     {
-      "src": "/logo512.png",
+      "src": "./logo512.png",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "/logo192.png",
+      "src": "./logo192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "maskable"
     }
   ],
   "id": "software-university-pwa",
-  "description": "PWA for scanning barcodes",
+  "description": "PWA Software University 2022",
   "start_url": ".",
-  "scope": "/",
   "display": "standalone",
   "background_color": "#3367D6",
   "theme_color": "#3367D6",
   "screenshots": [{
-    "src": "/logo512.png",
+    "src": "./logo512.png",
     "type": "image/png",
     "sizes": "512x512"
   }]

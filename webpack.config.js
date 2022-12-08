@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const path = require('path')
-const cwd = process.cwd()
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
+const path = require('path');
+const cwd = process.cwd();
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
-const isDev = process.env.NODE_ENV == 'development'
+const isDev = process.env.NODE_ENV == 'development';
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
@@ -40,15 +40,15 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'public'),
-    publicPath: isDev ? '/': './',
+    publicPath: isDev ? './': './',
     filename: isDev ? '[name].js' : '[name].[chunkhash].js',
     chunkFilename: isDev ? '[name].chunk.js' : '[name].[chunkhash].chunk.js',
     clean: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'static/index.html',
-      favicon: 'static/favicon.ico',
+      template: './static/index.html',
+      favicon: './static/favicon.ico',
       inject: true,
     }),
     new MiniCssExtractPlugin({
@@ -62,10 +62,10 @@ module.exports = {
           filter: (resourcePath) => !resourcePath.includes('index.html'),
         },
         {
-          from: path.join(__dirname, '/src/service-worker.js'),
+          from: path.join(__dirname, './src/service-worker.js'),
         },
         {
-          from: path.join(__dirname, '/src/service-worker-registration.js'),
+          from: path.join(__dirname, './src/service-worker-registration.js'),
         }
       ],
     }),
