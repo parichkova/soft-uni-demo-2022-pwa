@@ -1,5 +1,5 @@
-import { AddProduct } from "./components/AddProduct/AddProduct";
+import { AddDiscipline } from "./components/AddDiscipline/AddDiscipline";
 
 export const App = () => (
-  <AddProduct />
+  <AddDiscipline />
 );

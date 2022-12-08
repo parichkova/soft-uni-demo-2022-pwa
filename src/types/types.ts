@@ -1,10 +1,7 @@
-export interface Product {
-  id: string
-  barcode: string | number;
-  weight: number;
+export interface Discipline {
+  id: string;
+  name: string;
   description?: string;
+  duration: number;
   imageUrl?: string;
-  width?: number;
-  length?: number;
-  height?: number;
 }

@@ -3,20 +3,17 @@ import { v4 } from "uuid";
 import { PlusOutlined } from "@ant-design/icons";
 import { Form, Input, Button, Upload, Layout, Alert } from "antd";
 
-import { createProduct } from "~/utilities/create-new-product";
+import { createDiscipline } from "~/utilities/create-new-discipline";
 import { RcFile } from "antd/lib/upload";
 import { getBase64 } from "~/utilities/utilities";
 
 const { TextArea } = Input;
 const { Content } = Layout;
 
-export const AddProduct = () => {
-  const [barcode, setBarcode] = useState<string>("");
+export const AddDiscipline = () => {
+  const [discipline, setDiscipline] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [weight, setWeight] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
-  const [length, setLength] = useState<number>(0);
-  const [width, setWidth] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
 
@@ -27,15 +24,12 @@ export const AddProduct = () => {
   };
 
   const onClick = async () => {
-    if (barcode && weight) {
-      const result = await createProduct({
+    if (discipline && duration) {
+      const result = await createDiscipline({
         id: v4(),
-        barcode: parseInt(barcode),
+        name: discipline,
         description,
-        weight,
-        width,
-        height,
-        length,
+        duration,
         imageUrl,
       });
 
@@ -50,7 +44,8 @@ export const AddProduct = () => {
     <>
       {showToast && <Alert
         style={{ margin: '20px' }}
-        message={`Product with ${description ? `description "${description}"` : `barcode ${barcode}`} added.`}
+
+        message={`New discipline '${discipline}' ${duration ? `with ${duration} hours duration` : ''} added.`}
         type="success"
         onClose={() => setShowToast(!showToast)}
         showIcon
@@ -63,12 +58,12 @@ export const AddProduct = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
         >
-          <Form.Item label="Barcode" required>
+          <Form.Item label="Discipline" required>
             <Input
               onChange={({
                 target: { value },
-              }: React.ChangeEvent<HTMLInputElement>) => setBarcode(value)}
-              value={barcode}
+              }: React.ChangeEvent<HTMLInputElement>) => setDiscipline(value)}
+              value={discipline}
             />
           </Form.Item>
           <Form.Item label="Description">
@@ -82,45 +77,17 @@ export const AddProduct = () => {
               value={description}
             />
           </Form.Item>
-          {/* <Space.Compact size="medium" block> */}
             <Form.Item
-              label="Weight"
+              label="Duration"
               required
             >
               <Input
                 min="0"
-                onChange={({ target: { value } }) => setWeight(value ? parseInt(value) : 0)}
-                value={weight ? `${weight}` : undefined}
+                onChange={({ target: { value } }) => setDuration(value ? parseInt(value) : 0)}
+                value={duration ? `${duration}` : undefined}
               />
             </Form.Item>
-            <Form.Item
-              label="Width"
-            >
-              <Input
-                min="0"
-                onChange={({ target: { value } }) => setWidth(value ? parseInt(value) : 0)}
-                value={width ? `${width}` : undefined}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Length"
-            >
-              <Input
-                min="0"
-                onChange={({ target: { value } }) => setLength(value ? parseInt(value) : 0)}
-                value={length ? `${length}` : undefined}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Height"
-            >
-              <Input
-                min="0"
-                onChange={({ target: { value } }) => setHeight(value ? parseInt(value) : 0)}
-                value={height ? `${height}` : undefined}
-              />
-            </Form.Item>
-          <Form.Item label="Product image" valuePropName="fileList">
+          <Form.Item label="Discipline icon" valuePropName="fileList">
             <Upload
               action=""
               listType="picture-card"
@@ -138,7 +105,7 @@ export const AddProduct = () => {
               onClick={onClick}
               type="primary"
               block
-              disabled={!(Boolean(barcode) && Boolean(weight))}
+              disabled={!(Boolean(discipline) && Boolean(duration))}
             >
               Confirm
             </Button>
