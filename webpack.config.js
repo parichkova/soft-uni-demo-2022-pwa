@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const path = require('path');
-const cwd = process.cwd();
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
+const path = require('path')
+const cwd = process.cwd()
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const { InjectManifest } = require('workbox-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV == 'development'
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
@@ -16,15 +15,10 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|js)x?$/,
-        exclude: /(node_modules|\.webpack)/,
+        exclude: /(node_modules|\.webpack|service-worker*)/,
         use: [
           {
             loader: 'babel-loader',
-            options: {
-              plugins: [
-                isDev && require.resolve('react-refresh/babel')
-              ].filter(Boolean),
-            },
           },
         ],
       },
@@ -47,23 +41,20 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'public'),
-    publicPath: 'auto',
+    publicPath: isDev ? '/': './',
+    filename: isDev ? '[name].js' : '[name].[chunkhash].js',
+    chunkFilename: isDev ? '[name].chunk.js' : '[name].[chunkhash].chunk.js',
+    clean: true,
   },
   plugins: [
-    new ModuleFederationPlugin({
-      name: 'jsTalks2022DemoAddProduct',
-      filename: 'remoteEntry.js',
-      exposes: {
-        './AddProduct': './src/realIndex',
-      },
-    }),
     new HtmlWebpackPlugin({
       template: 'static/index.html',
       favicon: 'static/favicon.png',
       inject: true,
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
+      filename: '[name].[chunkhash].css',
+      chunkFilename: '[name].[chunkhash].chunk.css',
     }),
     new CopyPlugin({
       patterns: [
@@ -71,9 +62,14 @@ module.exports = {
           from: path.join(__dirname, 'static'),
           filter: (resourcePath) => !resourcePath.includes('index.html'),
         },
+        {
+          from: path.join(__dirname, '/src/service-worker.js'),
+        },
+        {
+          from: path.join(__dirname, '/src/service-worker-registration.js'),
+        }
       ],
     }),
-    ...(isDev ? [new ReactRefreshWebpackPlugin({ overlay: false })] : []),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
@@ -82,14 +78,12 @@ module.exports = {
     },
   },
   stats: 'errors-warnings',
-  optimization: {
-    splitChunks: false,
-  },
   devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
   devServer: {
-    port: 8082,
     open: true,
     hot: true,
-    static: path.join(__dirname, '/public/'),
+    client: {
+      overlay: false,
+    },
   },
 }
