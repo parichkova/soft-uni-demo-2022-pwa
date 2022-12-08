@@ -17,7 +17,6 @@
   "id": "software-university-pwa",
   "description": "PWA for scanning barcodes",
   "start_url": ".",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#3367D6",
   "theme_color": "#3367D6",
