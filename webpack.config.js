@@ -3,7 +3,6 @@ const path = require('path')
 const cwd = process.cwd()
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const { InjectManifest } = require('workbox-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 
 const isDev = process.env.NODE_ENV == 'development'
@@ -49,7 +48,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: 'static/index.html',
-      favicon: 'static/favicon.png',
+      favicon: 'static/favicon.ico',
       inject: true,
     }),
     new MiniCssExtractPlugin({
