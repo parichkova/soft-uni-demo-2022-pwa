@@ -1,11 +1,11 @@
 /* eslint-disable no-restricted-globals */
-
 const cacheName = 'cache-v1';
 const resourcesToPrecache = [
   'index.html',
   'logo192.png',
   'logo512.png'
-];
+]; // app-shell*
+
 let defferedEvent = null;
 
 self.addEventListener("beforeinstallprompt", (event) => {
@@ -25,8 +25,17 @@ self.addEventListener('install', (event) => {
   )
 });
 
-self.addEventListener("activate", () => {
+self.addEventListener("activate", (event) => {
  // old caches can be cleared
+ event.waitUntil(
+  caches.keys().then((cacheName) => (
+    Promise.all(
+      cacheName
+        .filter(cacheName => cacheName === 'old-cache-to-delete')
+        .map((cacheName) => caches.delete(cacheName))
+    )
+  ))
+ )
 });
 
 self.addEventListener("fetch", (event) => {
@@ -35,11 +44,11 @@ self.addEventListener("fetch", (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  const notificationTitle = 'Custom notification message';
+  const notificationTitle = 'Soft Uni PWA demo';
+
   const notification = {
-    body: 'Very long message body',
-    icon: '',
-    tag: 'notification-tag-soft-uni'
+    body: event.data.text(),
+    icon: './assets/favicon.ico',
   };
 
   if (Notification.permission === 'granted') {
