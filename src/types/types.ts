@@ -5,3 +5,15 @@ export interface Discipline {
   duration: number;
   imageUrl?: string;
 }
+
+export enum BackgroundSyncEventType {
+  SyncStart = 'SyncStart',
+  SingleSyncStart = 'SingleSyncStart',
+  SingleSyncEnd = 'SingleSyncEnd',
+  SyncEnd = 'SyncEnd',
+}
+
+export interface BackgroundSyncEvent<T = string> {
+  type: BackgroundSyncEventType;
+  payload?: T;
+}

@@ -7,6 +7,8 @@ export const networkFirstPaths = [
 
 export const cacheName = 'disciplinesApp';
 
-export const mockarooKey = '';
+export const disciplinesBackgroundSync = 'softuni-pwa-background-sync';
+
+export const mockarooKey = '63611180';
 
 export const mockarooBaseUrl = 'https://my.api.mockaroo.com';

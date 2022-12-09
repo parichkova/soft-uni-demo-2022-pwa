@@ -9,7 +9,9 @@ import {
 } from 'workbox-precaching';
 import { NetworkFirst } from 'workbox-strategies';
 import { NavigationRoute, registerRoute, Route } from 'workbox-routing';
-import { cacheName, networkFirstPaths, routesWithoutCaching } from './constants';
+import { Queue } from 'workbox-background-sync';
+
+import { cacheName, networkFirstPaths, routesWithoutCaching, disciplinesBackgroundSync } from './constants';
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -38,6 +40,7 @@ self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
+/* Push notifications */
 self.addEventListener('push', (event) => {
   const notificationTitle = 'Soft Uni PWA demo';
 
@@ -55,3 +58,38 @@ self.addEventListener('push', (event) => {
     )
   }
 });
+
+/* Background sync */
+const backgroundSyncQueue = new Queue(disciplinesBackgroundSync, {
+  onSync: async ({ queue }) => {
+    let currentEntry = await queue.shiftRequest();
+
+    while (currentEntry) {
+      try {
+        await fetch(currentEntry.request)
+      } catch (error) {
+        console.error(error);
+        await queue.unshiftRequest(currentEntry);
+      }
+
+      currentEntry = await queue.shiftRequest();
+    }
+  },
+})
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'POST' && !event.request.url.includes('/discipline')) {
+    return
+  }
+
+  const responsePromise = async () => {
+    try {
+      return await fetch(event.request.clone());
+    } catch (error) {
+      backgroundSyncQueue.pushRequest({ request: event.request });
+      throw error;
+    }
+  }
+
+  event.respondWith(responsePromise());
+})
