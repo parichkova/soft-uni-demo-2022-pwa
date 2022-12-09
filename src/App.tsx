@@ -1,7 +1,7 @@
-import { Route, Routes } from "react-router-dom";
-import { AddDiscipline } from "./components/AddDiscipline/AddDiscipline";
-import { AppLayout } from "./components/AppLayout/AppLayout";
-import { DisciplineList } from "./components/DisciplineList/DisciplineList";
+import { Route, Routes } from 'react-router-dom';
+import { AddDiscipline } from './components/AddDiscipline/AddDiscipline';
+import { AppLayout } from './components/AppLayout/AppLayout';
+import { DisciplineList } from './components/DisciplineList/DisciplineList';
 
 export const App = () => (
   <Routes>
