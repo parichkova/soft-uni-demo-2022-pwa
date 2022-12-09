@@ -1,12 +1,12 @@
 import { Discipline } from '../types/types';
-import { mockarooBaseUrl } from '../constants';
+import { cacheName, mockarooBaseUrl } from '../constants';
 import { getServerUrl } from './utilities';
 
 const headers = { 'Content-Type': 'application/json' };
 
 const updateCaches = async (discipline: Discipline) => {
   try {
-    const disciplinesAppCache = await caches.open('disciplinesApp');
+    const disciplinesAppCache = await caches.open(cacheName);
     const cachedDisciplines = await disciplinesAppCache.match(
       `${mockarooBaseUrl}/disciplines.json`,
       { ignoreVary: true, ignoreSearch: true }

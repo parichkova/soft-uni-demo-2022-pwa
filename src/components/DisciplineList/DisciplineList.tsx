@@ -11,6 +11,8 @@ export const DisciplineList = () => {
     getDisciplines().then((disciplines) => setDisciplines(disciplines));
   }, []);
 
+  // We are asking for notification permission here since this is a demo app.
+  // But ideally, we should not be doing it here as it accounts for bad UX.
   useEffect(() => {
       if (!('Notification' in window)) {
         console.log('Notifications not supported');

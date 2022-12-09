@@ -1,54 +1,41 @@
 /* eslint-disable no-console */
 /// <reference lib='webworker' />
-// This service worker can be customized!
-// See https://developers.google.com/web/tools/workbox/modules
-// for the list of available Workbox modules, or add any other
-// code you'd like.
+
 import { clientsClaim } from 'workbox-core';
 import {
   cleanupOutdatedCaches,
   createHandlerBoundToURL,
   precacheAndRoute,
 } from 'workbox-precaching';
-import { NavigationRoute, registerRoute, Route } from 'workbox-routing';
 import { NetworkFirst } from 'workbox-strategies';
+import { NavigationRoute, registerRoute, Route } from 'workbox-routing';
+import { cacheName, networkFirstPaths, routesWithoutCaching } from './constants';
 
-declare const self: ServiceWorkerGlobalScope
+declare const self: ServiceWorkerGlobalScope;
 
-const routesWithoutCaching: Array<string> = ['login', 'logout', '/api.*'];
+clientsClaim(); // allows an active service worker to set itself as the controller for all clients within its scope.
 
-clientsClaim();
+precacheAndRoute(self.__WB_MANIFEST); // During installation phase
 
-cleanupOutdatedCaches();
+cleanupOutdatedCaches(); // during the activation phase
 
-precacheAndRoute(self.__WB_MANIFEST);
-
-const handler = createHandlerBoundToURL('./index.html');
-
-const navigationRoute = new NavigationRoute(handler, {
+const navigationRoute = new NavigationRoute(createHandlerBoundToURL('./index.html'), {
   denylist: routesWithoutCaching.map((route) => new RegExp(route)),
 });
 
 registerRoute(navigationRoute);
 
-const networkFirstPaths = [
-  '/disciplines',
-  '/discipline'
-];
-
-const networkFirstRoute = new Route(
-  ({ request }) =>
+const networkFirstRoute = new Route(({ request }) =>
     networkFirstPaths.some((route) => request.url.includes(route)),
   new NetworkFirst({
-    cacheName: 'disciplinesApp',
+    cacheName,
   }),
 )
 
 registerRoute(networkFirstRoute);
 
-// Skip waiting for activation by default
 self.addEventListener('install', () => {
-  self.skipWaiting()
+  self.skipWaiting();
 });
 
 self.addEventListener('push', (event) => {
@@ -66,7 +53,5 @@ self.addEventListener('push', (event) => {
         }
       )
     )
-  } else {
-    // request permission
   }
 });
