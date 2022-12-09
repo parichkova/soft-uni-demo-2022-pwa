@@ -4,17 +4,16 @@ const cwd = process.cwd();
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-
-const isDev = process.env.NODE_ENV == 'development';
+const { InjectManifest } = require('workbox-webpack-plugin');
 
 module.exports = {
-  mode: isDev ? 'development' : 'production',
+  mode: 'production',
   entry: ['./src/index.tsx'],
   module: {
     rules: [
       {
         test: /\.(ts|js)x?$/,
-        exclude: /(node_modules|\.webpack|service-worker*)/,
+        exclude: /(node_modules|\.webpack)/,
         use: [
           {
             loader: 'babel-loader',
@@ -24,7 +23,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          { loader: isDev ? 'style-loader' : MiniCssExtractPlugin.loader },
+          { loader: MiniCssExtractPlugin.loader },
           { loader: 'css-loader' },
         ],
       },
@@ -40,9 +39,9 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'public'),
-    publicPath: isDev ? './': './',
-    filename: isDev ? '[name].js' : '[name].[chunkhash].js',
-    chunkFilename: isDev ? '[name].chunk.js' : '[name].[chunkhash].chunk.js',
+    publicPath: './',
+    filename: '[name].[chunkhash].js',
+    chunkFilename: '[name].[chunkhash].chunk.js',
     clean: true,
   },
   plugins: [
@@ -61,13 +60,12 @@ module.exports = {
           from: path.join(__dirname, 'static'),
           filter: (resourcePath) => !resourcePath.includes('index.html'),
         },
-        {
-          from: path.join(__dirname, './src/service-worker.js'),
-        },
-        {
-          from: path.join(__dirname, './src/service-worker-registration.js'),
-        }
       ],
+    }),
+    new InjectManifest({
+      swSrc: path.join(__dirname, 'src', 'service-worker.ts'),
+      swDest: 'service-worker.js',
+      maximumFileSizeToCacheInBytes: 5242880,
     }),
   ],
   resolve: {
@@ -77,12 +75,5 @@ module.exports = {
     },
   },
   stats: 'errors-warnings',
-  devtool: isDev ? 'eval-cheap-module-source-map' : 'source-map',
-  devServer: {
-    open: true,
-    hot: true,
-    client: {
-      overlay: false,
-    },
-  },
+  devtool: 'source-map',
 }
