@@ -1,11 +1,11 @@
-/* eslint-disable no-console */
+/* eslint-disable */
 /// <reference lib='webworker' />
 
 import { clientsClaim } from 'workbox-core';
 import {
   cleanupOutdatedCaches,
   createHandlerBoundToURL,
-  precacheAndRoute,
+  precacheAndRoute
 } from 'workbox-precaching';
 import { NetworkFirst } from 'workbox-strategies';
 import { NavigationRoute, registerRoute, Route } from 'workbox-routing';
@@ -22,16 +22,14 @@ precacheAndRoute(self.__WB_MANIFEST); // During installation phase
 cleanupOutdatedCaches(); // during the activation phase
 
 const navigationRoute = new NavigationRoute(createHandlerBoundToURL('./index.html'), {
-  denylist: routesWithoutCaching.map((route) => new RegExp(route)),
+  denylist: routesWithoutCaching.map((route) => new RegExp(route))
 });
 
 registerRoute(navigationRoute);
 
-const networkFirstRoute = new Route(({ request }) =>
-    networkFirstPaths.some((route) => request.url.includes(route)),
-  new NetworkFirst({
-    cacheName,
-  }),
+const networkFirstRoute = new Route(
+  ({ request }) => networkFirstPaths.some((route) => request.url.includes(route)),
+  new NetworkFirst({ cacheName })
 )
 
 registerRoute(networkFirstRoute);
@@ -46,15 +44,14 @@ self.addEventListener('push', (event) => {
 
   const notification = {
     body: (event as any).data.text(),
-    icon: './favicon.ico',
+    icon: './favicon.ico'
   };
 
   if (Notification.permission === 'granted') {
     event.waitUntil(
       self.registration.showNotification(notificationTitle, {
-          ...notification
-        }
-      )
+        ...notification
+      })
     )
   }
 });
@@ -64,12 +61,13 @@ const backgroundSyncQueue = new Queue(disciplinesBackgroundSync, {
   onSync: async ({ queue }) => {
     let currentEntry = await queue.shiftRequest();
 
-    while (currentEntry) {
+    while (currentEntry !== null) {
       try {
-        await fetch(currentEntry.request)
+        await fetch(currentEntry!.request)
+        // notify client
       } catch (error) {
         console.error(error);
-        await queue.unshiftRequest(currentEntry);
+        await queue.unshiftRequest(currentEntry!);
       }
 
       currentEntry = await queue.shiftRequest();
@@ -82,14 +80,14 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  const responsePromise = async () => {
+  const responsePromise = async (): Promise<Response> => {
     try {
       return await fetch(event.request.clone());
     } catch (error) {
-      backgroundSyncQueue.pushRequest({ request: event.request });
+      await backgroundSyncQueue.pushRequest({ request: event.request });
       throw error;
     }
   }
 
   event.respondWith(responsePromise());
-})
+});

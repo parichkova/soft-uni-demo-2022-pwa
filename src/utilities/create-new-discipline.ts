@@ -12,13 +12,13 @@ const updateCaches = async (discipline: Discipline) => {
       { ignoreVary: true, ignoreSearch: true }
     );
 
-    if (cachedDisciplines) {
-      const cachedDisciplinesParsed = (await cachedDisciplines?.json()) as Array<Discipline>;
+    if (cachedDisciplines != null) {
+      const cachedDisciplinesParsed = (await cachedDisciplines?.json()) as Discipline[];
 
       await disciplinesAppCache.put(
         new Request(cachedDisciplines.url, { method: 'GET', headers }),
         new Response(JSON.stringify([...cachedDisciplinesParsed, discipline]), {
-          headers,
+          headers
         })
       );
     }
@@ -28,12 +28,12 @@ const updateCaches = async (discipline: Discipline) => {
 }
 
 export const createDiscipline = async (discipline: Discipline) => {
-  updateCaches(discipline);
+  await updateCaches(discipline);
 
   try {
     const AddDisciplineQuery = await fetch(getServerUrl('/discipline'), {
       method: 'POST',
-      body: JSON.stringify(discipline),
+      body: JSON.stringify(discipline)
     });
 
     return (await AddDisciplineQuery.json()) as Discipline;
@@ -46,7 +46,7 @@ export const getDisciplines = async () => {
   try {
     const getDisciplinesQuery = await fetch(getServerUrl('/disciplines'), { method: 'GET' });
 
-    return (await getDisciplinesQuery.json()) as Array<Discipline>;
+    return (await getDisciplinesQuery.json()) as Discipline[];
   } catch (error) {
     return [];
   }

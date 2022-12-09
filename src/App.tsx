@@ -3,7 +3,7 @@ import { AddDiscipline } from './components/AddDiscipline/AddDiscipline';
 import { AppLayout } from './components/AppLayout/AppLayout';
 import { DisciplineList } from './components/DisciplineList/DisciplineList';
 
-export const App = () => (
+export const App = (): JSX.Element => (
   <Routes>
     <Route path="/" element={<AppLayout />}>
       <Route index element={<DisciplineList />} />

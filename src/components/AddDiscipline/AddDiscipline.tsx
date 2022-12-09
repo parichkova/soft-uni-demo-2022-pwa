@@ -1,43 +1,42 @@
-import React, { useState } from "react";
-import { v4 } from "uuid";
-import { PlusOutlined } from "@ant-design/icons";
-import { Form, Input, Button, Upload, Layout, Alert } from "antd";
+import React, { useState } from 'react';
+import { v4 } from 'uuid';
+import { PlusOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Upload, Layout, Alert } from 'antd';
 
-import { createDiscipline } from "~/utilities/create-new-discipline";
-import { RcFile } from "antd/lib/upload";
-import { getBase64 } from "~/utilities/utilities";
+import { createDiscipline } from '~/utilities/create-new-discipline';
+import { RcFile } from 'antd/lib/upload';
+import { getBase64 } from '~/utilities/utilities';
 
 const { TextArea } = Input;
 const { Content } = Layout;
 
-export const AddDiscipline = () => {
-  const [discipline, setDiscipline] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+export const AddDiscipline = (): JSX.Element => {
+  const [discipline, setDiscipline] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [duration, setDuration] = useState<number>(0);
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [showToast, setShowToast] = useState<boolean>(false);
 
-  const onChange =  async (fileList: any) => {
+  const onChange = async (fileList: any): Promise<void> => {
     if (fileList.length && fileList[0]) {
       setImageUrl(await getBase64(fileList[0].originFileObj as RcFile));
     }
   };
 
   const onClick = async () => {
-    if (discipline && duration) {
+    if (discipline != null && duration != null) {
       const result = await createDiscipline({
         id: v4(),
         name: discipline,
         description,
         duration,
-        imageUrl,
+        imageUrl
       });
 
-      if (result) {
+      if (result != null) {
         setShowToast(!showToast);
       }
     }
-
   }
 
   return (
@@ -52,7 +51,7 @@ export const AddDiscipline = () => {
         closable
       />
       }
-      <Content style={{ padding: "50px" }}>
+      <Content style={{ padding: '50px' }}>
         <Form
           layout="horizontal"
           labelCol={{ span: 4 }}
@@ -61,7 +60,7 @@ export const AddDiscipline = () => {
           <Form.Item label="Discipline" required>
             <Input
               onChange={({
-                target: { value },
+                target: { value }
               }: React.ChangeEvent<HTMLInputElement>) => setDiscipline(value)}
               value={discipline}
             />
@@ -69,7 +68,7 @@ export const AddDiscipline = () => {
           <Form.Item label="Description">
             <TextArea
               onInput={({
-                target: { value },
+                target: { value }
               }: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setDescription(value)
               }
@@ -91,7 +90,7 @@ export const AddDiscipline = () => {
             <Upload
               action=""
               listType="picture-card"
-              onChange={({ fileList }) => onChange(fileList)}
+              onChange={async ({ fileList }) => await onChange(fileList)}
             >
               <div>
                 <PlusOutlined />
@@ -101,7 +100,7 @@ export const AddDiscipline = () => {
           </Form.Item>
           <div>
             <Button
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
               onClick={onClick}
               type="primary"
               block

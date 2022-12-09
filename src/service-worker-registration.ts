@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable */
 type Config = {
   onSuccess?: (registration: ServiceWorkerRegistration) => void
   onUpdate?: (registration: ServiceWorkerRegistration) => void
@@ -14,11 +14,11 @@ const isLocalhost = Boolean(
 
 const registerValidServiceWorker = async (
   serviceWorkerUrl: string,
-  config?: Config,
-) => {
+  config?: Config
+): Promise<void> => {
   try {
     const registration = await navigator.serviceWorker.register(
-      serviceWorkerUrl,
+      serviceWorkerUrl
     )
 
     registration.onupdatefound = () => {
@@ -28,7 +28,7 @@ const registerValidServiceWorker = async (
       }
       installingWorker.onstatechange = () => {
         if (installingWorker.state === 'installed') {
-          if (navigator.serviceWorker.controller) {
+          if (navigator.serviceWorker.controller !== null) {
             // At this point, the updated precached content has been fetched,
             // but the previous service worker will still serve the older
             // content until all client tabs are closed.
@@ -54,8 +54,8 @@ const registerValidServiceWorker = async (
 
 const checkValidServiceWorker = async (
   serviceWorkerUrl: string,
-  config?: Config,
-) => {
+  config?: Config
+): Promise<void> => {
   // Check if the service worker can be found. If it can't reload the page.
   try {
     const { status, headers } = await fetch(serviceWorkerUrl, {
@@ -76,7 +76,7 @@ const checkValidServiceWorker = async (
   }
 }
 
-export const registerServiceWorker = (config?: Config) => {
+export const registerServiceWorker = (config?: Config): void => {
   if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
     window.addEventListener('load', async () => {
       const serviceWorkerUrl = './service-worker.js'

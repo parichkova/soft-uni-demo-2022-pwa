@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(document.getElementById('root')!);
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter basename={location.protocol.includes('https') ? '/soft-uni-demo-2022-pwa' :'/'}>
+    <BrowserRouter basename={location.protocol.includes('https') ? '/soft-uni-demo-2022-pwa' : '/'}>
       <App />
     </BrowserRouter>
   </React.StrictMode>
