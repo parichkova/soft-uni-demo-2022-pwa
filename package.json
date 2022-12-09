@@ -4,7 +4,9 @@
   "description": "PWA React app",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.config.js",
-    "start": "npm run build && serve -s public"
+    "start": "npm run build && serve -s public",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d public"
   },
   "keywords": [
     "PWA",
@@ -27,6 +29,7 @@
     "core-js": "^3.26.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
+    "gh-pages": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.6.1",
     "style-loader": "^3.3.1",

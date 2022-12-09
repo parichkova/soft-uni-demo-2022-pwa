@@ -5,15 +5,29 @@ import { getDisciplines } from "~/utilities/create-new-discipline";
 
 export const DisciplineList = () => {
   const { Panel } = Collapse;
-  const [disciplines, setDisciplines] = useState<Array<Discipline>>();
+  const [disciplines, setDisciplines] = useState<Array<Discipline>>([]);
 
   useEffect(() => {
     getDisciplines().then((disciplines) => setDisciplines(disciplines));
   }, []);
 
+  useEffect(() => {
+      if (!('Notification' in window)) {
+        console.log('Notifications not supported');
+      }
+
+      if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            new Notification('Welcome');
+          }
+        });
+      }
+  }, []);
+
   return (
     <>
-      {(disciplines ?? []).map(({ id, name, description, duration, imageUrl }) => (
+      {(disciplines).map(({ id, name, description, duration, imageUrl }) => (
         <Collapse key={id}>
           <Panel key={id} header={name}>
           <Row>

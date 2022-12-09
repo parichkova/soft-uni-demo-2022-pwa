@@ -8,11 +8,11 @@ export const AppLayout = () => {
 
   const menuItems: MenuProps['items'] = [
     {
-      key: `menu-item-1`,
+      key: `menu-item-0`,
       label: <Link to='/'>Disciplines</Link>,
     },
     {
-      key: `menu-item-0`,
+      key: `menu-item-1`,
       label: <Link to="/add">Create new discipline</Link>,
     },
   ]
@@ -22,9 +22,9 @@ export const AppLayout = () => {
 
   return (
     <Layout>
-      <Header>
+      <Header style={{backgroundColor: "rgb(256, 256, 256)"}}>
         <Menu
-          theme="dark"
+          theme="light"
           mode="horizontal"
           selectedKeys={selectedKeys}
           items={menuItems}
