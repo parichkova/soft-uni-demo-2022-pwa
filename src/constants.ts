@@ -1,2 +1,2 @@
-export const mockarooKey = 'cafeb6b0'
-export const mockarooBaseUrl = 'https://my.api.mockaroo.com'
+export const mockarooKey = '63611180';
+export const mockarooBaseUrl = 'https://my.api.mockaroo.com';

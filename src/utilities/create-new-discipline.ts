@@ -1,42 +1,53 @@
 import { Discipline } from '../types/types';
 import { mockarooBaseUrl } from '../constants';
-import { getMockarooUrl } from './utilities';
+import { getServerUrl } from './utilities';
 
-const headers =  { 'Content-Type': 'application/json' };
+const headers = { 'Content-Type': 'application/json' };
 
-export const createDiscipline = async (discipline: Discipline | null) => {
+const updateCaches = async (discipline: Discipline) => {
   try {
-    try {
-      const disciplinesAppCache = await caches.open('disciplinesApp');
-      const cachedDisciplines = await disciplinesAppCache.match(
-        `${mockarooBaseUrl}/discipline.json`,
-        { ignoreVary: true, ignoreSearch: true }
-      );
-
-      if (cachedDisciplines) {
-        const cachedProducts = await cachedDisciplines?.json() as Array<Discipline>;
-
-        await disciplinesAppCache.put(new Request(
-            cachedDisciplines.url,
-            { method: "GET", headers }
-          ),
-          new Response(
-            JSON.stringify([...cachedProducts, discipline]),
-            { headers }
-          ),
-        );
-      }
-    } catch (e) {
-      console.log("Issues retrieving requests from the cache");
-    }
-
-    const AddDisciplineQuery = await fetch(
-      getMockarooUrl('/discipline'),
-      { method: "POST", body: JSON.stringify(discipline) }
+    const disciplinesAppCache = await caches.open('disciplinesApp');
+    const cachedDisciplines = await disciplinesAppCache.match(
+      `${mockarooBaseUrl}/disciplines.json`,
+      { ignoreVary: true, ignoreSearch: true }
     );
+
+    if (cachedDisciplines) {
+      const cachedDisciplinesParsed = (await cachedDisciplines?.json()) as Array<Discipline>;
+
+      await disciplinesAppCache.put(
+        new Request(cachedDisciplines.url, { method: 'GET', headers }),
+        new Response(JSON.stringify([...cachedDisciplinesParsed, discipline]), {
+          headers,
+        })
+      );
+    }
+  } catch (e) {
+    console.log('Issues retrieving requests from the cache');
+  }
+}
+
+export const createDiscipline = async (discipline: Discipline) => {
+  updateCaches(discipline);
+
+  try {
+    const AddDisciplineQuery = await fetch(getServerUrl('/discipline'), {
+      method: 'POST',
+      body: JSON.stringify(discipline),
+    });
 
     return (await AddDisciplineQuery.json()) as Discipline;
   } catch (error: any) {
     return {};
   }
-}
+};
+
+export const getDisciplines = async () => {
+  try {
+    const getDisciplinesQuery = await fetch(getServerUrl('/disciplines'), { method: 'GET' });
+
+    return (await getDisciplinesQuery.json()) as Array<Discipline>;
+  } catch (error) {
+    return [];
+  }
+};
