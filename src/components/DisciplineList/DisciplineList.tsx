@@ -22,7 +22,7 @@ export const DisciplineList = (): JSX.Element => {
       Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
           /* eslint-disable no-new */
-          new Notification('Welcome');
+          console.log('Permission granted');
         }
       }).catch((error) => console.log(error));
     }
