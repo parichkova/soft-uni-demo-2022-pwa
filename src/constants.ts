@@ -11,5 +11,4 @@ export const disciplinesBackgroundSync = 'softuni-pwa-background-sync';
 
 // ------------- //
 export const mockarooBaseUrl = 'https://my.api.mockaroo.com';
-
 export const mockarooKey = 'c8be32c0';

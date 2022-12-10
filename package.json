@@ -1,7 +1,7 @@
 {
   "name": "soft-uni-2022-pwa-demo",
   "version": "1.0.0",
-  "description": "PWA React app",
+  "description": "PWA for listing and adding new disciplines",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.config.js",
     "start": "npm run build && serve -s public",
